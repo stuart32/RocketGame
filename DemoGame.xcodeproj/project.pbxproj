@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0438C7392055649500406A6D /* loose1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0438C7372055649300406A6D /* loose1.mp3 */; };
+		0438C73A2055649500406A6D /* loose2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0438C7382055649500406A6D /* loose2.mp3 */; };
 		04CEC4F32045FC8A004EEA39 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CEC4F22045FC8A004EEA39 /* AppDelegate.swift */; };
 		04CEC4F92045FC8A004EEA39 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CEC4F82045FC8A004EEA39 /* GameScene.swift */; };
 		04CEC4FB2045FC8A004EEA39 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CEC4FA2045FC8A004EEA39 /* GameViewController.swift */; };
@@ -38,6 +40,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0438C7372055649300406A6D /* loose1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = loose1.mp3; sourceTree = "<group>"; };
+		0438C7382055649500406A6D /* loose2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = loose2.mp3; sourceTree = "<group>"; };
 		04CEC4EF2045FC89004EEA39 /* DemoGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DemoGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		04CEC4F22045FC8A004EEA39 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		04CEC4F82045FC8A004EEA39 /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
@@ -139,6 +143,8 @@
 		04CEC5282046002B004EEA39 /* Sounds */ = {
 			isa = PBXGroup;
 			children = (
+				0438C7372055649300406A6D /* loose1.mp3 */,
+				0438C7382055649500406A6D /* loose2.mp3 */,
 				04CEC5292046002B004EEA39 /* background-music-aac.caf */,
 				04CEC52A2046002B004EEA39 /* pew-pew-lei.caf */,
 			);
@@ -255,8 +261,10 @@
 				04CEC52B2046002B004EEA39 /* background-music-aac.caf in Resources */,
 				04CEC4FE2045FC8A004EEA39 /* Main.storyboard in Resources */,
 				04CEC5002045FC8A004EEA39 /* Assets.xcassets in Resources */,
+				0438C73A2055649500406A6D /* loose2.mp3 in Resources */,
 				04CEC52C2046002B004EEA39 /* pew-pew-lei.caf in Resources */,
 				04CEC5032045FC8A004EEA39 /* LaunchScreen.storyboard in Resources */,
+				0438C7392055649500406A6D /* loose1.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
