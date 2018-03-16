@@ -2,11 +2,27 @@ import SpriteKit
 
 var monstersDestroyed = 0
 
+var healthLabel: SKLabelNode!
+var health = 5{
+    didSet {
+        healthLabel.text = "Health: \(health)"
+    }
+}
+
+var scoreLabel: SKLabelNode!
+
+var score = 0{
+    didSet {
+        scoreLabel.text = "Score: \(score)"
+    }
+}
+
 struct PhysicsCategory {
     static let None      : UInt32 = 0
     static let All       : UInt32 = UInt32.max
     static let Monster   : UInt32 = 0b1       // 1
     static let Projectile: UInt32 = 0b10      // 2
+    static let Person    : UInt32 = 0b11      // 3
 }
 
 
@@ -63,7 +79,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(background)
         // backgroundColor = SKColor.white
         // 3
-        player.position = CGPoint(x: size.width/2, y: size.height/2)
+        player.position = CGPoint(x: size.width/2, y: size.height)
         player.zPosition = 1
         player.physicsBody = SKPhysicsBody(rectangleOf: player.size) // 1
         player.physicsBody?.isDynamic = true // 2
@@ -74,9 +90,25 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // 4
         addChild(player)
         
+        //5
+        
+        scoreLabel = SKLabelNode(fontNamed: "Chalkduster")
+        scoreLabel.text = "Score: 0"
+        scoreLabel.horizontalAlignmentMode = .right
+        scoreLabel.position = CGPoint(x:size.width-25 , y:size.height-50)
+        scoreLabel.zPosition = 1
+        addChild(scoreLabel)
+        
+        healthLabel = SKLabelNode(fontNamed: "Chalkduster")
+        healthLabel.text = "Health: 5"
+        healthLabel.horizontalAlignmentMode = .left
+        healthLabel.position = CGPoint(x: 25, y:size.height-50)
+        healthLabel.zPosition = 1
+        addChild(healthLabel)
         
         physicsWorld.gravity = CGVector.init(dx: 0.0, dy: -9.81)
         physicsWorld.contactDelegate = self
+       
         
 
         run(SKAction.repeatForever(
@@ -169,7 +201,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             projectile.physicsBody?.contactTestBitMask = PhysicsCategory.Monster
             projectile.physicsBody?.collisionBitMask = PhysicsCategory.None
             projectile.physicsBody?.usesPreciseCollisionDetection = true
-            projectile.physicsBody?.affectedByGravity = false
+            projectile.physicsBody?.affectedByGravity = true
             
             
             // Determine where to spawn the monster along the X axis
@@ -203,18 +235,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             //projectile.run(SKAction.sequence([actionMove, actionMoveDone]))
             
             let loseAction = SKAction.run() {
-                let reveal = SKTransition.flipHorizontal(withDuration: 0.5)
-                let gameOverScene = GameOverScene(size: self.size, won: false)
-                self.view?.presentScene(gameOverScene, transition: reveal)
+                health = health - 1;
+                //monstersDestroyed = 0;
+                //score = 0
+                //let reveal = SKTransition.flipHorizontal(withDuration: 0.5)
+                //let gameOverScene = GameOverScene(size: self.size, won: false)
+                //self.view?.presentScene(gameOverScene, transition: reveal)
             }
             projectile.run(SKAction.sequence([actionMove, loseAction, actionMoveDone]))
+            
         }
         else{
-            let projectile = SKSpriteNode(imageNamed: "green")
+            let projectile = SKSpriteNode(imageNamed: "person3")
             
             projectile.physicsBody = SKPhysicsBody(circleOfRadius: projectile.size.width/2)
             projectile.physicsBody?.isDynamic = true
-            projectile.physicsBody?.categoryBitMask = PhysicsCategory.Projectile
+            projectile.physicsBody?.categoryBitMask = PhysicsCategory.Person
             projectile.physicsBody?.contactTestBitMask = PhysicsCategory.Monster
             projectile.physicsBody?.collisionBitMask = PhysicsCategory.None
             projectile.physicsBody?.usesPreciseCollisionDetection = true
@@ -249,14 +285,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             // 9 - Create the actions
             let actionMove = SKAction.move(to: realDest, duration: 2.0)
             let actionMoveDone = SKAction.removeFromParent()
-            //projectile.run(SKAction.sequence([actionMove, actionMoveDone]))
             
-            let loseAction = SKAction.run() {
-                let reveal = SKTransition.flipHorizontal(withDuration: 0.5)
-                let gameOverScene = GameOverScene(size: self.size, won: false)
-                self.view?.presentScene(gameOverScene, transition: reveal)
+            let addhealth = SKAction.run() {
+                health = health + 1;
+                //monstersDestroyed = 0;
+                //score = 0
+                //let reveal = SKTransition.flipHorizontal(withDuration: 0.5)
+                //let gameOverScene = GameOverScene(size: self.size, won: false)
+                //self.view?.presentScene(gameOverScene, transition: reveal)
             }
-            projectile.run(SKAction.sequence([actionMove, loseAction, actionMoveDone]))
+           projectile.run(SKAction.sequence([actionMove, addhealth, actionMoveDone]))
+            
+            
+ 
         }
     }
     
@@ -297,22 +338,56 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func update(_ currentTime: TimeInterval) {
         
         if(leftTouch == true && rightTouch == true){
-            player.physicsBody?.applyForce(CGVector(dx: 0, dy: 3000))
+           // player.physicsBody?.affectedByGravity = false
+            player.physicsBody?.applyForce(CGVector(dx: 0, dy: 2500))
             print("up")
         }
-            
+        
         if(leftTouch == true && rightTouch == false){
-            player.physicsBody?.applyForce(CGVector(dx: 2000, dy: 2000))
+          //  player.physicsBody?.affectedByGravity = false
+            player.physicsBody?.applyForce(CGVector(dx: 2500, dy: 2000))
             print("right")
         }
         if(leftTouch == false && rightTouch == true){
-            player.physicsBody?.applyForce(CGVector(dx: -2000, dy: 2000))
+           // player.physicsBody?.affectedByGravity = false
+            player.physicsBody?.applyForce(CGVector(dx: -2500, dy: 2000))
             print("left")
+        }
+        if(leftTouch == false && rightTouch == false)
+        {
+           // player.physicsBody?.affectedByGravity = true
+            //player.physicsBody?.applyForce(CGVector(dx: -2000, dy: 2000))
+            print("left")
+        }
+        if(player.position.y > size.height - player.size.height/2){
+            player.position.y = size.height - player.size.height/2;
+        }
+        
+        if(player.position.x < player.size.width/2){
+            player.position.x = player.size.width/2
+        }
+        
+        if(player.position.x > size.width - player.size.width/2){
+            player.position.x = size.width - player.size.width/2
+        }
+        
+        if(health<=0){
+            let loseAction = SKAction.run() {
+                score=0;
+                monstersDestroyed=0;
+                health=5;
+                let reveal = SKTransition.flipHorizontal(withDuration: 0.5)
+                let gameOverScene = GameOverScene(size: self.size, won: false)
+                self.view?.presentScene(gameOverScene, transition: reveal)
+            }
+            player.run(SKAction.sequence([loseAction]))
         }
         
         
         if(player.position.y < -1 * player.size.height/2){
             let loseAction = SKAction.run() {
+                score=0;
+                monstersDestroyed=0;
                 let reveal = SKTransition.flipHorizontal(withDuration: 0.5)
                 let gameOverScene = GameOverScene(size: self.size, won: false)
                 self.view?.presentScene(gameOverScene, transition: reveal)
@@ -322,15 +397,28 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     
+    /*
+    func caughtPerson(person: SKSpriteNode, monster: SKSpriteNode) {
+        print("MissHit")
+        run(SKAction.playSoundFileNamed("loose1.mp3", waitForCompletion: false))
+        
+        person.removeFromParent()
+       // monster.removeFromParent()
+        
+        health = health - 1;
+        
+    }
+    */
     
-    func projectileDidCollideWithMonster(projectile: SKSpriteNode, monster: SKSpriteNode) {
+    func caughtMonster(projectile: SKSpriteNode, monster: SKSpriteNode) {
         print("Hit")
         run(SKAction.playSoundFileNamed("pew-pew-lei.caf", waitForCompletion: false))
         
         projectile.removeFromParent()
-       // monster.removeFromParent()
+        // monster.removeFromParent()
         
         monstersDestroyed += 1
+        score = monstersDestroyed
         if (monstersDestroyed > 30) {
             let reveal = SKTransition.flipHorizontal(withDuration: 0.5)
             let gameOverScene = GameOverScene(size: self.size, won: true)
@@ -358,10 +446,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             (secondBody.categoryBitMask & PhysicsCategory.Projectile != 0)) {
             if let monster = firstBody.node as? SKSpriteNode, let
                 projectile = secondBody.node as? SKSpriteNode {
-                projectileDidCollideWithMonster(projectile: projectile, monster: monster)
+                caughtMonster(projectile: projectile, monster: monster)
             }
         }
         
+        /*
+        if ((firstBody.categoryBitMask & PhysicsCategory.Monster != 0) &&
+            (secondBody.categoryBitMask & PhysicsCategory.Person != 0)) {
+            if let monster = firstBody.node as? SKSpriteNode, let
+                projectile = secondBody.node as? SKSpriteNode {
+                caughtPerson(person: projectile, monster: monster)
+            }
+        }
+        */
     }
     
 }
